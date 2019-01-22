@@ -1,0 +1,46 @@
+    <script src="//apis.google.com/js/platform.js?onload=start"></script>
+
+    <div id="signinButton">
+      <span class="g-signin"
+        data-scope="openid email"
+        data-clientid="772040363522-3864a5m24b4tddhoc5rdapssm6m3ge85.apps.googleusercontent.com"
+        data-redirecturi="postmessage"
+        data-accesstype="offline"
+        data-cookiepolicy="single_host_origin"
+        data-callback="signInCallback"
+        data-approvalprompt="force">
+      </span>
+    </div>
+
+    <script>
+      function signInCallback(authResult) {
+        if (authResult["code"]) {
+          // Hide the sign-in button now that the user is authorized
+          $("#signinButton").attr("style", "display: none");
+
+          // Send the one-time-use code to the server, if the server responds, write a "login successful" message to the web page and then redirect back to the main restaurants page
+          $.ajax({
+            type: "POST",
+            url: "/gconnect?state={{STATE}}",
+            processData: false,
+            data: authResult["code"],
+            contentType: "application/octet-stream; charset=utf-8",
+            success: function(result) {
+              // Handle or verify the server response if necessary.
+              let message;
+              if (result) {
+                message = `Login Successful!${result}</br></br>Redirecting...`;
+              } else if (authResult["error"]) {
+                message = `There was an error: ${authResult["error"]}</br>Redirecting...`;
+              } else {
+                message = "Failed to make a server-side call. Check your configuration and console.</br></br>Redirecting...";
+              }
+              redirect_page(message);
+            },
+            error: function() {
+              redirect_page(`Error during authentication. Try again later.</br></br>Redirecting...`);
+            }
+          });
+        }
+      }
+    </script>

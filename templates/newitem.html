@@ -1,0 +1,32 @@
+{% extends "main.html" %}
+{% block content %}
+        <h2>Novo Item</h2>
+        {% if previous_category %}
+        <form id="newitem" action="{{url_for('addItem', category_name = previous_category|lower)}}" method = 'POST'>
+        {% else %}
+        <form id="newitem" action="{{url_for('addItem')}}" method = 'POST'>
+        {% endif %}
+            <p>Título:</p>
+            <input type="text" class="input" size="30" name="title" value="{{item.title}}">
+            <p><br>Descrição:</p>
+            <textarea name="description" class="input" maxlength="2000" rows="5" cols="40">{{item.description}}</textarea>
+            <p><br>Categoria:</p>
+            <select name="category_id" class="input" form="newitem">
+                <option value="">(Select category)</option>
+            {% for c in categories %}
+                {% if item.category_id and c.id == item.category_id|int %}
+                <option value="{{c.id}}" selected>{{c.name}}</option>
+                {% else %}
+                <option value="{{c.id}}">{{c.name}}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <br><br>
+            <input type='submit' value='Create'>
+        </form>
+        {% if previous_category %}
+        <p><br><a href="{{url_for('showAllItems', category_name = previous_category|lower)}}">Cancelar</a></p>
+        {% else %}
+        <p><br><a href="{{url_for('showCatalog')}}">Cancelar</a></p>
+        {% endif %}
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+{% block content %}
+        <div class="section">
+          <span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;
+          <a class="link" href="{{url_for('showCatalog')}}">Página Inicial</a>
+          <h3>Departamentos:</h3>
+        {% for c in categories %}
+          <p><a href="{{url_for('showAllItems', category_name = c.name|lower)}}">{{c.name}}</a></p>
+        {% endfor %}
+        </div>
+        <div class="section">
+        {% block private_content %}
+        {% endblock %}
+
+        {% if category_name %}
+            <h3>{{category_name}} Anúncios ({{items|length}} itens):</h3>
+        {% else %}
+            <h3>Últimos Itens:</h3>
+        {% endif %}
+
+        {% if items %}
+            {% for i in items %}
+                {% if category_name %}
+            <p><a href="{{url_for('showItem', category_name = category_name|lower, item_name = i.title|lower)}}">{{i.title}}</a></p>
+                {% else %}
+            <p><a href="{{url_for('showItem', category_name = i.category_name|lower, item_name = i.title|lower)}}">{{i.title}} ({{i.category_name}})</a></p>
+                {% endif %}
+            {% endfor %}
+        {% else %}
+            <p>Nenhum item encontrado</p>
+        {% endif %}
+        </div>
+{% endblock %}

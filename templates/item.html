@@ -1,0 +1,7 @@
+{% extends "public_item.html" %}
+{% block private_content %}
+        <p>
+          <a href="{{url_for('editItem', category_name = category_name|lower, item_name = item.title|lower)}}">Edit</a>&nbsp;|
+          <a href="{{url_for('deleteItem', category_name = category_name|lower, item_name = item.title|lower)}}">Delete</a>
+        </p>
+{% endblock %}

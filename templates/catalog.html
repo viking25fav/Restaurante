@@ -1,0 +1,9 @@
+{% extends "public_catalog.html" %}
+{% block private_content %}
+            <span class="glyphicon glyphicon-file" aria-hidden="true"></span>&nbsp;
+        {% if category_name %}
+            <a class="link" href="{{url_for('addItem', category_name = category_name|lower)}}">Novo Item</a>
+        {% else %}
+            <a class="link" href="{{url_for('addItem')}}">Novo Item</a>
+        {% endif %}
+{% endblock %}

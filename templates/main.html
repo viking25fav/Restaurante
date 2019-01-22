@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css') }}">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+  </head>
+  <body>
+    <div class="main-container shadowed">
+      <header>
+        <div class="header left">
+          <h1>Loja do Flavio (Informática)</h1>
+        </div>
+        <div class="header right">
+          {% if "username" not in session %}
+          <button id="loginBtn">Login</button>
+          {% else %}
+            {% if "picture" not in session %}
+          <img class="circular-image" src="/static/blank_user.gif" alt="{{session.username}}" title="{{session.username}}">
+            {% else %}
+          <img class="circular-image" src="{{session.picture}}" alt="{{session.username}}" title="{{session.username}}">
+            {% endif %}
+          <button id="loginBtn">Logout</button>
+          {% endif %}
+        </div>
+      </header>
+
+      <div>
+      {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <br>
+          <ul>
+              {% for message in messages %}
+              <li> <strong> {{ message }} </strong> </li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+      {% endwith %}
+      </div>
+
+      <div class="content-container">
+  			{% block content %}
+  			{% endblock %}
+  		</div>
+
+      <div id="loginModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          {% if "username" not in session %}
+          <script>
+            function redirect_page(message){
+              $("#result").html(message)
+              setTimeout(function() {
+                {% if routeCallBack == "showAllItems" %}
+                window.location.href = "{{url_for(routeCallBack, category_name = category_name|lower)}}";
+                {% elif routeCallBack == "showItem" %}
+                window.location.href = "{{url_for(routeCallBack, category_name = category_name|lower, item_name = item.title|lower)}}";
+                {% else %}
+                window.location.href = "{{url_for(routeCallBack)}}";
+                {% endif %}
+              }, 4000);
+            }
+          </script>
+
+          <div id="result">
+            <h2>Escolha a sua conta:</h2><br>
+            <p>{% include "g_login.html" %}</p>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <script>
+        $("#loginBtn").on("click", function() {
+          {% if "username" not in session %}
+          $("#loginModal").attr("style", "display: block");
+          {% else %}
+          window.location.href="{{url_for('disconnect')}}";
+          {% endif %}
+        });
+
+        $("#loginModal").find(".close").on("click", function() {
+          $("#loginModal").attr("style", "display: none");
+        });
+
+        window.onclick = function(event) {
+          if (event.target == $("#loginModal")[0]) {
+            $("#loginModal").attr("style", "display: none");
+          }
+        }
+      </script>
+    </div>
+  </body>
+</html>

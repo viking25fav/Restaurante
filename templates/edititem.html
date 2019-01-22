@@ -1,0 +1,24 @@
+{% extends "main.html" %}
+{% block content %}
+        <h2>Editar Item</h2>
+        <form id="edititem" action="{{url_for('editItem', category_name = previous_category|lower, item_name = previous_item|lower)}}" method = 'POST'>
+            <p>Título:</p>
+            <input type="text" class="input" size="30" name="title" value="{{item.title}}">
+            <p><br>Descrição:</p>
+            <textarea name="description" class="input" maxlength="2000" rows="5" cols="40">{{item.description}}</textarea>
+            <p><br>Categoria:</p>
+            <select name="category_id" class="input" form="edititem">
+                <option value="">(Select category)</option>
+            {% for c in categories %}
+                {% if c.id == item.category_id|int %}
+                <option value="{{c.id}}" selected>{{c.name}}</option>
+                {% else %}
+                <option value="{{c.id}}">{{c.name}}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            <br><br>
+            <input type='submit' value='Edit'>
+        </form>
+        <p><br><a href="{{url_for('showItem', category_name = previous_category|lower, item_name = previous_item|lower)}}">Cancelar</a></p>
+{% endblock %}

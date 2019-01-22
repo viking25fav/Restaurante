@@ -1,0 +1,21 @@
+{% extends "main.html" %}
+{% block content %}
+        <span class="glyphicon glyphicon-home" aria-hidden="true"></span>&nbsp;
+        <a class="link" href="{{url_for('showCatalog')}}">Home</a>&nbsp;&gt;
+        <a class="link" href="{{url_for('showAllItems', category_name = category_name|lower)}}">{{category_name}}</a>
+        <div>
+          <h3 class="item">{{item.title}}</h3>
+          <p><strong>Descrição:</strong> {{item.description}}</p>
+          <p>
+            <strong>Criado por:</strong>
+            {% if creator and creator.picture %}
+            <img class="circular-image-small" src="{{creator.picture}}" alt="{{creator.name}}" title="{{creator.name}}">
+            {% else %}
+            <img class="circular-image-small" src="/static/blank_user.gif" alt="{{creator.name}}" title="{{creator.name}}">
+            {% endif %}
+            {{creator.name}}
+          </p>
+        </div>
+        {% block private_content %}
+        {% endblock %}
+{% endblock %}
